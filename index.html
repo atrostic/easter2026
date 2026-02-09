@@ -30,28 +30,30 @@
       background: repeating-linear-gradient(
         to bottom,
         rgba(0,0,0,0) 0px,
-        rgba(0,0,0,0) 2px,
-        rgba(0,0,0,0.15) 3px
+        rgba(0,0,0,0.15) 3px,
+        rgba(0,0,0,0) 4px
       );
       pointer-events: none;
-      z-index: 2;
+      z-index: 3;
     }
 
     .message {
       opacity: 0;
-      animation: reveal 1.2s forwards;
-      z-index: 1;
+      animation:
+        reveal 1.2s forwards,
+        textGlitch 6s forwards;
+      z-index: 2;
     }
 
-    /* Red glitch overlay with flicker during the last ~1 second */
+    /* Red glitch overlay – very short */
     .red-glitch {
       position: absolute;
       inset: 0;
-      background: #ff0000;
+      background: #b00000;
       opacity: 0;
-      z-index: 3;
+      z-index: 4;
       pointer-events: none;
-      animation: redFlicker 6s forwards;
+      animation: redFlash 6s forwards;
     }
 
     @keyframes reveal {
@@ -65,31 +67,31 @@
       96% { opacity: 1; }
     }
 
-    /* 6s total timeline:
-       - 0%..83% normal
-       - 84%..100% last ~1s: red overlay flickers hard
-    */
-    @keyframes redFlicker {
-      0%, 83% { opacity: 0; }
+    /* Text corruption only at the end */
+    @keyframes textGlitch {
+      0%, 90% { opacity: 1; transform: none; }
 
-      /* flicker window (last ~1s) */
-      84% { opacity: 1; }
-      85% { opacity: 0.2; }
-      86% { opacity: 1; }
-      87% { opacity: 0.0; }
-      88% { opacity: 0.9; }
-      89% { opacity: 0.3; }
-      90% { opacity: 1; }
-      91% { opacity: 0.1; }
-      92% { opacity: 0.95; }
-      93% { opacity: 0.4; }
+      91% { opacity: 0.2; transform: translateX(-1px); }
+      92% { opacity: 1; transform: translateX(1px); }
+      93% { opacity: 0.1; }
       94% { opacity: 1; }
-      95% { opacity: 0.15; }
+      95% { opacity: 0.3; transform: translateX(-2px); }
       96% { opacity: 1; }
-      97% { opacity: 0.25; }
-      98% { opacity: 1; }
-      99% { opacity: 0.6; }
+      97% { opacity: 0.15; }
+      98% { opacity: 1; transform: translateX(1px); }
+      99% { opacity: 0.4; }
 
+      100% { opacity: 1; transform: none; }
+    }
+
+    /* ~0.45s red flash near the end */
+    @keyframes redFlash {
+      0%, 91% { opacity: 0; }
+      92% { opacity: 0.9; }
+      93% { opacity: 0.2; }
+      94% { opacity: 1; }
+      95% { opacity: 0.4; }
+      96% { opacity: 0; }
       100% { opacity: 0; }
     }
   </style>
