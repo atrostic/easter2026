@@ -2,7 +2,6 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <!-- Redirect after the red glitch -->
   <meta http-equiv="refresh" content="6;url=https://easter.codes/welcome2026">
   <title>Access</title>
 
@@ -38,22 +37,21 @@
       z-index: 2;
     }
 
-    /* Red glitch overlay */
-    .red-glitch {
-      position: absolute;
-      inset: 0;
-      background: #b00000;
-      opacity: 0;
-      z-index: 3;
-      animation: redFlash 6s forwards;
-      pointer-events: none;
-    }
-
-    /* Message fade-in */
     .message {
       opacity: 0;
       animation: reveal 1.2s forwards;
       z-index: 1;
+    }
+
+    /* Red glitch overlay with flicker during the last ~1 second */
+    .red-glitch {
+      position: absolute;
+      inset: 0;
+      background: #ff0000;
+      opacity: 0;
+      z-index: 3;
+      pointer-events: none;
+      animation: redFlicker 6s forwards;
     }
 
     @keyframes reveal {
@@ -67,20 +65,38 @@
       96% { opacity: 1; }
     }
 
-    /* Red screen hits ~1s before redirect */
-    @keyframes redFlash {
+    /* 6s total timeline:
+       - 0%..83% normal
+       - 84%..100% last ~1s: red overlay flickers hard
+    */
+    @keyframes redFlicker {
       0%, 83% { opacity: 0; }
-      84%, 99% { opacity: 1; }
+
+      /* flicker window (last ~1s) */
+      84% { opacity: 1; }
+      85% { opacity: 0.2; }
+      86% { opacity: 1; }
+      87% { opacity: 0.0; }
+      88% { opacity: 0.9; }
+      89% { opacity: 0.3; }
+      90% { opacity: 1; }
+      91% { opacity: 0.1; }
+      92% { opacity: 0.95; }
+      93% { opacity: 0.4; }
+      94% { opacity: 1; }
+      95% { opacity: 0.15; }
+      96% { opacity: 1; }
+      97% { opacity: 0.25; }
+      98% { opacity: 1; }
+      99% { opacity: 0.6; }
+
       100% { opacity: 0; }
     }
   </style>
 </head>
 
 <body>
-  <div class="message">
-    ACCESS STRING ACCEPTED
-  </div>
-
+  <div class="message">ACCESS STRING ACCEPTED</div>
   <div class="red-glitch"></div>
 </body>
 </html>
