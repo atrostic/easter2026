@@ -2,8 +2,10 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="3;url=https://easter.codes/welcome2026">
+  <!-- Redirect AFTER message has time to breathe -->
+  <meta http-equiv="refresh" content="6;url=https://easter.codes/welcome2026">
   <title>Access</title>
+
   <style>
     body {
       background: black;
@@ -13,16 +15,51 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
       font-size: 28px;
-      animation: flicker 1.2s infinite;
+      letter-spacing: 2px;
+      animation: flicker 2.5s infinite;
+      position: relative;
+      overflow: hidden;
     }
+
+    /* CRT scanlines */
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0,0,0,0) 0px,
+        rgba(0,0,0,0) 2px,
+        rgba(0,0,0,0.15) 3px
+      );
+      pointer-events: none;
+    }
+
+    /* Message fade-in */
+    .message {
+      opacity: 0;
+      animation: reveal 1.2s forwards;
+      z-index: 1;
+    }
+
+    @keyframes reveal {
+      to { opacity: 1; }
+    }
+
     @keyframes flicker {
       0%, 100% { opacity: 1; }
-      50% { opacity: 0.85; }
+      92% { opacity: 0.9; }
+      94% { opacity: 0.75; }
+      96% { opacity: 1; }
     }
   </style>
 </head>
+
 <body>
-  ACCESS STRING ACCEPTED
+  <div class="message">
+    ACCESS STRING ACCEPTED
+  </div>
 </body>
 </html>
