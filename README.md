@@ -1,2 +1,2 @@
-# easter2026
-Easter 2026
+# obsidian-control-gateway
+README
