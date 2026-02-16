@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SPRINGVECTOR</title>
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #0b0f14;
+      color: #d7e0ea;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      letter-spacing: 0.3px;
+    }
+    .card {
+      width: min(720px, 92vw);
+      padding: 36px 28px;
+      border: 1px solid rgba(215,224,234,.14);
+      border-radius: 16px;
+      background: rgba(255,255,255,.03);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+    .sub {
+      margin: 0 0 26px;
+      color: rgba(215,224,234,.75);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .status {
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 14px;
+      border: 1px solid rgba(215,224,234,.14);
+      border-radius: 999px;
+      background: rgba(0,0,0,.18);
+      font-size: 13px;
+      color: rgba(215,224,234,.9);
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #35f08a;
+      box-shadow: 0 0 14px rgba(53,240,138,.6);
+    }
+    .footer {
+      margin-top: 22px;
+      font-size: 12px;
+      color: rgba(215,224,234,.55);
+    }
+
+    /* Hidden text matches background */
+    .ghost {
+      color: #0b0f14;
+      font-size: 1px;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!--
+    CLUE (Atrosticorp // SPRINGVECTOR):
+    "Use the VECTOR, not the WORD."
+    Start at (1,1).
+  -->
+
+  <main class="card" role="main" aria-label="SPRINGVECTOR">
+    <h1>SPRINGVECTOR</h1>
+    <p class="sub">
+      Authorization channel established.<br />
+      Await further instructions.
+    </p>
+
+    <div class="status" aria-label="System status">
+      <span class="dot" aria-hidden="true"></span>
+      SYSTEM: ONLINE
+    </div>
+
+    <div class="footer">
+      ATROSTICORP INTERNAL • SV-01
+    </div>
+  </main>
+
+  <!-- Hidden in plain sight (ROT13 encoded) -->
+  <div class="ghost">
+    GUR NAFJRE VF NG GUR FBHEPR
+  </div>
+
+</body>
+</html>
