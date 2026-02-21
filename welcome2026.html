@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(160deg, #0f172a, #1e293b);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #f1f5f9;
+}
+
+.container {
+    max-width: 700px;
+    padding: 60px;
+    text-align: center;
+    animation: fadeIn 1.8s ease forwards;
+    opacity: 0;
+}
+
+h1 {
+    font-size: 42px;
+    margin-bottom: 30px;
+    letter-spacing: -1px;
+}
+
+p {
+    font-size: 18px;
+    line-height: 1.8;
+    margin: 18px 0;
+    color: #cbd5e1;
+}
+
+.divider {
+    margin: 40px auto;
+    width: 80px;
+    height: 1px;
+    background: #334155;
+}
+
+button {
+    margin-top: 30px;
+    padding: 14px 28px;
+    font-size: 16px;
+    background: transparent;
+    border: 1px solid #64748b;
+    color: #f1f5f9;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: #334155;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Welcome</h1>
+
+    <p>This hunt was built for you.</p>
+
+    <p>
+        Not to trick you.<br>
+        Not to frustrate you.<br>
+        But to challenge you.
+    </p>
+
+    <div class="divider"></div>
+
+    <p>
+        You already have everything you need —
+        logic, creativity, persistence,
+        and each other.
+    </p>
+
+    <p>
+        Pay attention.<br>
+        Stay patient.<br>
+        The best discoveries aren’t rushed.
+    </p>
+
+    <div class="divider"></div>
+
+    <p>Enjoy the experience.</p>
+
+    <button onclick="window.location.href='firstclue.html'">
+        Begin →
+    </button>
+</div>
+
+</body>
+</html>
