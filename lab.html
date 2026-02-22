@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lab :: Easter Hunt</title>
+
+  <!-- meta-clue: THE THIRD LETTER MATTERS MORE THAN THE FIRST -->
+  <meta name="description" content="A development sandbox. Nothing here is accidental." />
+
+  <style>
+    :root{
+      --bg0:#060914;
+      --bg1:#0b1226;
+      --bg2:#101a33;
+      --text:#eef2ff;
+      --muted:rgba(238,242,255,.75);
+      --line:rgba(238,242,255,.14);
+      --glass:rgba(255,255,255,.06);
+      --glass2:rgba(0,0,0,.22);
+      --ok:rgba(34,197,94,.95);
+      --warn:rgba(250,204,21,.95);
+      --bad:rgba(248,113,113,.95);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(900px 600px at 20% 15%, rgba(125,211,252,.18), transparent 60%),
+        radial-gradient(900px 600px at 80% 30%, rgba(167,139,250,.16), transparent 60%),
+        radial-gradient(700px 500px at 60% 80%, rgba(34,197,94,.10), transparent 55%),
+        linear-gradient(160deg, var(--bg0), var(--bg2));
+      overflow-x:hidden;
+    }
+
+    /* subtle film grain */
+    body:before{
+      content:"";
+      position:fixed; inset:0;
+      pointer-events:none;
+      opacity:.08;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+      mix-blend-mode:overlay;
+    }
+
+    .stars{
+      position:fixed; inset:-20vh -20vw;
+      pointer-events:none;
+      transform: translate3d(var(--px,0px), var(--py,0px), 0);
+      transition: transform 120ms linear;
+      opacity:.9;
+    }
+    .stars:before{
+      content:"";
+      position:absolute; inset:0;
+      background-image:
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,.55), transparent 60%),
+        radial-gradient(2px 2px at 140px 90px, rgba(255,255,255,.45), transparent 60%),
+        radial-gradient(1px 1px at 90px 160px, rgba(255,255,255,.35), transparent 60%),
+        radial-gradient(1px 1px at 210px 40px, rgba(255,255,255,.35), transparent 60%),
+        radial-gradient(1px 1px at 40px 210px, rgba(255,255,255,.30), transparent 60%);
+      background-size: 240px 240px;
+      filter: blur(.2px);
+      opacity:.55;
+    }
+
+    .wrap{
+      width:min(980px, 92vw);
+      margin: 52px auto 80px;
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius:22px;
+      box-shadow: 0 30px 90px rgba(0,0,0,.40), inset 0 1px 0 rgba(255,255,255,.12);
+      overflow:hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:14px 18px;
+      border-bottom:1px solid var(--line);
+      background: rgba(0,0,0,.18);
+    }
+    .dot{width:10px;height:10px;border-radius:50%;}
+    .dot.red{background:rgba(248,113,113,.75)}
+    .dot.yel{background:rgba(251,191,36,.75)}
+    .dot.grn{background:rgba(34,197,94,.75)}
+    .title{
+      margin-left:8px;
+      font-size:13px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .content{
+      padding: 28px 22px 22px;
+    }
+
+    h1{
+      margin: 6px 0 10px;
+      font-size: clamp(26px, 3.3vw, 42px);
+      letter-spacing:-0.02em;
+    }
+    .sub{
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size: clamp(14px, 1.6vw, 18px);
+      line-height:1.6;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:18px;
+    }
+    @media (max-width: 880px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .panel{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.16);
+      border-radius:18px;
+      padding:16px;
+    }
+
+    .boot{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      font-size: 13px;
+      color: rgba(238,242,255,.78);
+      line-height: 1.5;
+      white-space: pre-wrap;
+      min-height: 122px;
+    }
+
+    .hr{
+      height:1px;
+      background:linear-gradient(90deg, transparent, var(--line), transparent);
+      margin: 14px 0;
+    }
+
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    input{
+      flex:1;
+      min-width: 220px;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.25);
+      color: var(--text);
+      outline:none;
+    }
+    input::placeholder{ color: rgba(238,242,255,.45); }
+
+    button{
+      padding: 12px 14px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      cursor:pointer;
+      user-select:none;
+      transition: background .15s ease, transform .08s ease;
+    }
+    button:hover{ background: rgba(255,255,255,.10); }
+    button:active{ transform: translateY(1px); }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.18);
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .pill b{ color: var(--text); font-weight:600; }
+
+    .status{
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .status.ok{ color: var(--ok); }
+    .status.bad{ color: var(--bad); }
+    .status.warn{ color: var(--warn); }
+
+    .hidden{
+      display:none;
+    }
+
+    /* hold-to-begin */
+    .hold{
+      position:relative;
+      overflow:hidden;
+    }
+    .holdbar{
+      position:absolute;
+      left:0; top:0; bottom:0;
+      width:0%;
+      background: rgba(255,255,255,.10);
+      pointer-events:none;
+      transition: width 40ms linear;
+    }
+
+    /* faux map */
+    .map{
+      position:relative;
+      height: 220px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.14);
+      overflow:hidden;
+      background:
+        radial-gradient(900px 400px at 50% 0%, rgba(125,211,252,.08), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.18));
+    }
+    .map:before{
+      content:"";
+      position:absolute; inset:0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+      background-size: 26px 26px;
+      opacity:.35;
+      transform: translate3d(var(--mx,0px), var(--my,0px), 0);
+    }
+    .hotspot{
+      position:absolute;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.65);
+      background: rgba(255,255,255,.10);
+      box-shadow: 0 0 0 8px rgba(255,255,255,.06);
+      cursor:pointer;
+    }
+    .hotspot:hover{
+      box-shadow: 0 0 0 10px rgba(255,255,255,.10);
+    }
+    .hint{
+      font-size: 13px;
+      color: var(--muted);
+      margin-top:10px;
+      line-height:1.6;
+    }
+
+    .fade-in{
+      opacity:0;
+      transform: translateY(10px);
+      transition: opacity 700ms ease, transform 700ms ease;
+    }
+    .fade-in.ready{
+      opacity:1;
+      transform: translateY(0);
+    }
+
+    /* tiny “glitch” flicker on demand */
+    .flicker{
+      animation: flicker 110ms steps(2,end) 6;
+    }
+    @keyframes flicker{
+      0%{ filter: brightness(1); }
+      50%{ filter: brightness(1.25) contrast(1.1); }
+      100%{ filter: brightness(1); }
+    }
+  </style>
+</head>
+
+<body>
+  <!--
+    Dev note:
+    If you’re reading this in view-source, you’re in the right mindset.
+    Try the keyboard sequence: "vector"
+  -->
+
+  <div class="stars" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <div class="card" id="card">
+      <div class="topbar">
+        <span class="dot red"></span><span class="dot yel"></span><span class="dot grn"></span>
+        <div class="title">Easter Hunt :: Lab</div>
+      </div>
+
+      <div class="content">
+        <h1>Lab Page</h1>
+        <p class="sub">
+          A single page to test interactive patterns: subtle clues, progressive reveals, and “earned” discovery.
+        </p>
+
+        <div class="grid">
+          <!-- Left: Boot + input -->
+          <div class="panel">
+            <div class="row" style="justify-content:space-between;">
+              <span class="pill">Mode: <b>Development</b></span>
+              <span class="pill">Hint: <b>Inspect</b> and <b>Observe</b></span>
+            </div>
+
+            <div class="hr"></div>
+
+            <div id="boot" class="boot fade-in"></div>
+
+            <div class="hr"></div>
+
+            <div class="row">
+              <input id="answer" placeholder="Enter a test answer (try: CORRYVRECKAN)" autocomplete="off" />
+              <button id="submit">Submit</button>
+              <span id="ansStatus" class="status">Waiting…</span>
+            </div>
+
+            <div class="hint">
+              Tip: input matching is forgiving (case, spaces, punctuation). This is about reasoning, not typing.
+            </div>
+
+            <div id="reveal1" class="hidden">
+              <div class="hr"></div>
+              <div class="panel" style="background:rgba(0,0,0,.12); border-color:rgba(255,255,255,.12);">
+                <div class="row" style="justify-content:space-between;">
+                  <span class="pill">Unlocked: <b>Layer 1</b></span>
+                  <button id="flickerBtn" title="Tiny ambiance">Flicker</button>
+                </div>
+                <p class="hint" style="margin:10px 0 0;">
+                  You unlocked the first layer. The page can now reveal additional content without navigating.
+                  Look around—some information is present but not obvious.
+                </p>
+              </div>
+            </div>
+
+            <div id="reveal2" class="hidden">
+              <div class="hr"></div>
+              <div class="panel" style="background:rgba(0,0,0,.12); border-color:rgba(255,255,255,.12);">
+                <span class="pill">Unlocked: <b>Layer 2</b></span>
+                <p class="hint" style="margin:10px 0 0;">
+                  Keyboard trigger accepted. Next: try clicking the map hotspots in order.
+                </p>
+              </div>
+            </div>
+
+            <div class="hr"></div>
+
+            <div class="row">
+              <button class="hold" id="holdBtn">
+                <span class="holdbar" id="holdbar"></span>
+                Hold 3 seconds to “Begin”
+              </button>
+              <span id="holdStatus" class="status">Not armed.</span>
+            </div>
+
+            <div class="hint">
+              This pattern is great for “slow down” moments. It reduces accidental clicks and feels deliberate.
+            </div>
+          </div>
+
+          <!-- Right: Map / hotspots -->
+          <div class="panel">
+            <div class="row" style="justify-content:space-between;">
+              <span class="pill">Test Module: <b>Hotspot Map</b></span>
+              <span class="pill">DevTools: <b>Console</b></span>
+            </div>
+
+            <div class="hr"></div>
+
+            <div class="map" id="map">
+              <div class="hotspot" data-key="alpha" style="left:16%; top:34%;" title="Hotspot A"></div>
+              <div class="hotspot" data-key="bravo" style="left:62%; top:28%;" title="Hotspot B"></div>
+              <div class="hotspot" data-key="charlie" style="left:46%; top:68%;" title="Hotspot C"></div>
+            </div>
+
+            <div class="hint" id="mapHint">
+              Click hotspots. Some will respond differently depending on what you’ve already unlocked.
+            </div>
+
+            <div class="hr"></div>
+
+            <div class="hint">
+              Inspect this element:
+              <span class="pill" id="inspectMe" data-note="Third-letter matters." data-axis="rotate-y">
+                <b>inspect me</b>
+              </span>
+              <br />
+              (The clue is not displayed. It’s stored in attributes.)
+            </div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="hint">
+          Hidden layers currently supported on this page:
+          <span class="pill"><b>Console</b></span>
+          <span class="pill"><b>View Source</b></span>
+          <span class="pill"><b>Keyboard Trigger</b></span>
+          <span class="pill"><b>Hold-to-Activate</b></span>
+          <span class="pill"><b>Hotspots</b></span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Console/DevTools “reward”
+    console.log("%cCuriosity is rewarded.", "font-weight:700; font-size:14px;");
+    console.log("Some clues are meant for the kind of mind that checks.");
+    console.log("Keyboard sequence on this page: %cvector", "font-weight:700;");
+
+    // tiny boot sequence (timed reveal)
+    const bootEl = document.getElementById("boot");
+    const bootLines = [
+      "[init] handshake…",
+      "[init] calibrating perception…",
+      "[init] loading patience module…",
+      "[ok] environment ready"
+    ];
+
+    function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+    (async function boot(){
+      bootEl.classList.add("ready");
+      bootEl.textContent = "";
+      for (const line of bootLines){
+        bootEl.textContent += line + "\n";
+        await sleep(420);
+      }
+      bootEl.textContent += "\nTip: Try submitting CORRYVRECKAN.\n";
+    })();
+
+    // Parallax-ish pointer motion
+    const stars = document.querySelector(".stars");
+    const map = document.getElementById("map");
+    window.addEventListener("pointermove", (e) => {
+      const x = (e.clientX / window.innerWidth - 0.5);
+      const y = (e.clientY / window.innerHeight - 0.5);
+      document.body.style.setProperty("--px", `${x * 18}px`);
+      document.body.style.setProperty("--py", `${y * 14}px`);
+      map.style.setProperty("--mx", `${x * 10}px`);
+      map.style.setProperty("--my", `${y * 10}px`);
+    });
+
+    // Input validation with normalization
+    const answerEl = document.getElementById("answer");
+    const submitEl = document.getElementById("submit");
+    const ansStatus = document.getElementById("ansStatus");
+    const reveal1 = document.getElementById("reveal1");
+
+    function normalize(s){
+      return (s || "")
+        .toLowerCase()
+        .trim()
+        .replace(/[\s\-_.,:;'"`~!@#$%^&*()+=<>/?\\|[\]{}]/g, "");
+    }
+
+    const accepted = new Set([
+      "corryvreckan",
+      "corryvreckanwhirlpool",
+      "whirlpool"
+    ]);
+
+    function setStatus(el, msg, cls){
+      el.className = "status " + (cls || "");
+      el.textContent = msg;
+    }
+
+    function unlockLayer1(){
+      reveal1.classList.remove("hidden");
+      setStatus(ansStatus, "Accepted. Layer 1 unlocked.", "ok");
+      document.getElementById("holdStatus").textContent = "Armed.";
+    }
+
+    function checkAnswer(){
+      const v = normalize(answerEl.value);
+      if (!v){
+        setStatus(ansStatus, "Enter something.", "warn");
+        return;
+      }
+      if (accepted.has(v)){
+        unlockLayer1();
+      } else {
+        setStatus(ansStatus, "Nope. Try again.", "bad");
+      }
+    }
+
+    submitEl.addEventListener("click", checkAnswer);
+    answerEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") checkAnswer();
+    });
+
+    // Flicker button (tiny ambience)
+    document.getElementById("flickerBtn").addEventListener("click", () => {
+      const card = document.getElementById("card");
+      card.classList.remove("flicker");
+      void card.offsetWidth;
+      card.classList.add("flicker");
+    });
+
+    // Hold-to-begin (3 seconds)
+    const holdBtn = document.getElementById("holdBtn");
+    const holdBar = document.getElementById("holdbar");
+    const holdStatus = document.getElementById("holdStatus");
+    let holdTimer = null;
+    let holdStart = 0;
+    const HOLD_MS = 3000;
+
+    function holdReset(){
+      if (holdTimer) cancelAnimationFrame(holdTimer);
+      holdTimer = null;
+      holdStart = 0;
+      holdBar.style.width = "0%";
+    }
+
+    function holdTick(ts){
+      if (!holdStart) holdStart = ts;
+      const elapsed = ts - holdStart;
+      const pct = Math.min(100, (elapsed / HOLD_MS) * 100);
+      holdBar.style.width = pct + "%";
+
+      if (elapsed >= HOLD_MS){
+        holdReset();
+        // For a real hunt, route to your next page:
+        // window.location.href = "/nextstep.html";
+        setStatus(holdStatus, "Hold complete. (Would navigate now.)", "ok");
+        console.log("Hold-to-activate complete.");
+        return;
+      }
+      holdTimer = requestAnimationFrame(holdTick);
+    }
+
+    function layer1Unlocked(){
+      return !reveal1.classList.contains("hidden");
+    }
+
+    holdBtn.addEventListener("pointerdown", () => {
+      if (!layer1Unlocked()){
+        setStatus(holdStatus, "Locked. Solve Layer 1 first.", "bad");
+        return;
+      }
+      setStatus(holdStatus, "Holding…", "warn");
+      holdReset();
+      holdTimer = requestAnimationFrame(holdTick);
+    });
+
+    ["pointerup","pointercancel","pointerleave"].forEach(evt => {
+      holdBtn.addEventListener(evt, () => {
+        if (holdTimer){
+          holdReset();
+          setStatus(holdStatus, "Hold cancelled.", "warn");
+        }
+      });
+    });
+
+    // Keyboard sequence trigger: "vector"
+    const target = "vector";
+    let buffer = "";
+    const reveal2 = document.getElementById("reveal2");
+
+    function unlockLayer2(){
+      reveal2.classList.remove("hidden");
+      console.log("%cKeyboard trigger accepted.", "font-weight:700;");
+    }
+
+    window.addEventListener("keydown", (e) => {
+      const k = (e.key || "").toLowerCase();
+      if (k.length !== 1 || !/[a-z0-9]/.test(k)) return;
+      buffer = (buffer + k).slice(-target.length);
+      if (buffer === target && layer1Unlocked()){
+        unlockLayer2();
+      }
+    });
+
+    // Hotspot map: click order after Layer 2
+    const mapHint = document.getElementById("mapHint");
+    const order = ["alpha","bravo","charlie"];
+    let idx = 0;
+
+    function mapMsg(msg, cls){
+      mapHint.className = "hint";
+      mapHint.innerHTML = msg;
+      if (cls === "ok") mapHint.style.color = "rgba(34,197,94,.95)";
+      else if (cls === "bad") mapHint.style.color = "rgba(248,113,113,.95)";
+      else mapHint.style.color = "rgba(238,242,255,.75)";
+    }
+
+    document.querySelectorAll(".hotspot").forEach(hs => {
+      hs.addEventListener("click", () => {
+        if (reveal2.classList.contains("hidden")){
+          mapMsg("Hotspots are asleep. Unlock Layer 2 first (type “vector”).", "bad");
+          return;
+        }
+        const key = hs.getAttribute("data-key");
+        if (key === order[idx]){
+          idx++;
+          mapMsg(`Good. ${idx}/${order.length} correct.`, "ok");
+          if (idx === order.length){
+            mapMsg("Sequence complete. (In a real hunt, this would reveal a coordinate / link.)", "ok");
+            console.log("Hotspot sequence complete.");
+          }
+        } else {
+          idx = 0;
+          mapMsg("Incorrect order. Reset.", "bad");
+        }
+      });
+    });
+
+    // Small “Easter egg” in attributes
+    const inspectMe = document.getElementById("inspectMe");
+    // Put a quiet console hint if someone clicks it (still fair)
+    inspectMe.addEventListener("click", () => {
+      console.log("Inspect element → data-note / data-axis");
+    });
+  </script>
+</body>
+</html>
