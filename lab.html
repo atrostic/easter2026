@@ -536,7 +536,7 @@
       if (elapsed >= HOLD_MS){
         holdReset();
         // For a real hunt, route to your next page:
-        // window.location.href = "/nextstep.html";
+        window.location.href = "/nextsteps.html";
         setStatus(holdStatus, "Hold complete. (Would navigate now.)", "ok");
         console.log("Hold-to-activate complete.");
         return;
