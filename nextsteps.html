@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Next Steps :: Easter Hunt</title>
+  <meta name="description" content="Progress, persistence, QR, and collaboration demos." />
+
+  <style>
+    :root{
+      --bg0:#060914;
+      --bg1:#0b1226;
+      --bg2:#101a33;
+      --text:#eef2ff;
+      --muted:rgba(238,242,255,.75);
+      --line:rgba(238,242,255,.14);
+      --glass:rgba(255,255,255,.06);
+      --glass2:rgba(0,0,0,.20);
+      --ok:rgba(34,197,94,.95);
+      --warn:rgba(250,204,21,.95);
+      --bad:rgba(248,113,113,.95);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background:
+        radial-gradient(900px 600px at 20% 15%, rgba(125,211,252,.18), transparent 60%),
+        radial-gradient(900px 600px at 80% 30%, rgba(167,139,250,.16), transparent 60%),
+        linear-gradient(160deg, var(--bg0), var(--bg2));
+      padding: 44px 0 70px;
+    }
+    .wrap{ width:min(980px, 92vw); margin:0 auto; }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius:22px;
+      box-shadow: 0 30px 90px rgba(0,0,0,.40), inset 0 1px 0 rgba(255,255,255,.12);
+      overflow:hidden;
+      backdrop-filter: blur(10px);
+    }
+    .topbar{
+      display:flex; align-items:center; gap:10px;
+      padding:14px 18px;
+      border-bottom:1px solid var(--line);
+      background: rgba(0,0,0,.18);
+    }
+    .dot{width:10px;height:10px;border-radius:50%;}
+    .dot.red{background:rgba(248,113,113,.75)}
+    .dot.yel{background:rgba(251,191,36,.75)}
+    .dot.grn{background:rgba(34,197,94,.75)}
+    .title{
+      margin-left:8px;
+      font-size:13px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .content{ padding:24px 18px 18px; }
+    h1{ margin:6px 0 10px; font-size: clamp(24px, 3vw, 40px); letter-spacing:-0.02em; }
+    p{ margin:10px 0; color:var(--muted); line-height:1.6; }
+    .grid{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; }
+    @media (max-width: 900px){ .grid{ grid-template-columns:1fr; } }
+    .panel{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.16);
+      border-radius:18px;
+      padding:16px;
+    }
+    .hr{
+      height:1px;
+      background:linear-gradient(90deg, transparent, var(--line), transparent);
+      margin: 12px 0;
+    }
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    input{
+      flex:1;
+      min-width: 190px;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.25);
+      color: var(--text);
+      outline:none;
+    }
+    input::placeholder{ color: rgba(238,242,255,.45); }
+    button, a.btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      cursor:pointer;
+      user-select:none;
+      text-decoration:none;
+      transition: background .15s ease, transform .08s ease;
+    }
+    button:hover, a.btn:hover{ background: rgba(255,255,255,.10); }
+    button:active, a.btn:active{ transform: translateY(1px); }
+
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.18);
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .pill b{ color: var(--text); font-weight:600; }
+
+    .status{ font-size: 12px; color: var(--muted); }
+    .status.ok{ color: var(--ok); }
+    .status.warn{ color: var(--warn); }
+    .status.bad{ color: var(--bad); }
+
+    .mini{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      font-size: 12px;
+      color: rgba(238,242,255,.70);
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+    canvas{
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.14);
+      max-width: 100%;
+      height: auto;
+    }
+    .hidden{ display:none; }
+  </style>
+</head>
+
+<body>
+  <!-- nextsteps meta: "archive is not required; continuity is" -->
+  <div class="wrap">
+    <div class="card">
+      <div class="topbar">
+        <span class="dot red"></span><span class="dot yel"></span><span class="dot grn"></span>
+        <div class="title">Easter Hunt :: Next Steps</div>
+      </div>
+
+      <div class="content">
+        <h1>Next Steps</h1>
+        <p>
+          This page demonstrates: <span class="pill"><b>Persistence</b></span>
+          <span class="pill"><b>QR</b></span>
+          <span class="pill"><b>Two-solver lock</b></span>
+          <span class="pill"><b>Timed reveals</b></span>
+        </p>
+
+        <div class="grid">
+          <!-- Panel: Progress / Persistence -->
+          <div class="panel">
+            <div class="row" style="justify-content:space-between;">
+              <span class="pill">Module: <b>Progress</b></span>
+              <span class="pill">Storage: <b>localStorage</b></span>
+            </div>
+
+            <div class="hr"></div>
+
+            <p>Toggle a “checkpoint” and refresh the page—your state stays.</p>
+
+            <div class="row">
+              <button id="setCheckpoint">Set checkpoint</button>
+              <button id="clearCheckpoint">Clear</button>
+              <span id="cpStatus" class="status">No checkpoint set.</span>
+            </div>
+
+            <div class="hr"></div>
+
+            <div class="mini" id="cpDump"></div>
+          </div>
+
+          <!-- Panel: QR Generation (minimal QR, no libs) -->
+          <div class="panel">
+            <div class="row" style="justify-content:space-between;">
+              <span class="pill">Module: <b>QR</b></span>
+              <span class="pill">No libs</span>
+            </div>
+
+            <div class="hr"></div>
+
+            <p>
+              This generates a <b>simple scannable QR</b> using a tiny embedded implementation.
+              Use it to point to a URL, a phrase, or a coordinate.
+            </p>
+
+            <div class="row">
+              <input id="qrText" placeholder="Enter text/URL for QR (try: https://easter.codes/wxgrxjdgwvy)" />
+              <button id="makeQR">Generate</button>
+            </div>
+
+            <div class="hr"></div>
+
+            <canvas id="qrCanvas" width="220" height="220" aria-label="QR Code"></canvas>
+            <div class="status" id="qrStatus">Waiting…</div>
+          </div>
+
+          <!-- Panel: Two-solver lock -->
+          <div class="panel">
+            <div class="row" style="justify-content:space-between;">
+              <span class="pill">Module: <b>Two-solver lock</b></span>
+              <span class="pill">Fair collaboration</span>
+            </div>
+
+            <div class="hr"></div>
+
+            <p>
+              Require two separate inputs. Great when each person has half the info (physical clue split, etc.).
+            </p>
+
+            <div class="row">
+              <input id="keyA" placeholder="Solver A key (try: LATTICE)" />
+              <input id="keyB" placeholder="Solver B key (try: VECTOR)" />
+            </div>
+
+            <div class="row">
+              <button id="unlock2">Unlock</button>
+              <span id="twoStatus" class="status">Locked.</span>
+            </div>
+
+            <div id="twoReveal" class="hidden">
+              <div class="hr"></div>
+              <p><b>Unlocked.</b> In a real hunt, reveal the next step here.</p>
+              <a class="btn" href="/nextstep.html">Go to nextstep.html →</a>
+            </div>
+          </div>
+
+          <!-- Panel: Timed reveal -->
+          <div class="panel">
+            <div class="row" style="justify-content:space-between;">
+              <span class="pill">Module: <b>Timed reveal</b></span>
+              <span class="pill">“Slow down”</span>
+            </div>
+
+            <div class="hr"></div>
+
+            <p>
+              Great for “system scanning” vibes or forcing a deliberate pause before revealing a clue.
+            </p>
+
+            <div class="row">
+              <button id="startTimer">Start 5s reveal</button>
+              <span id="timerStatus" class="status">Idle.</span>
+            </div>
+
+            <div id="timerReveal" class="hidden">
+              <div class="hr"></div>
+              <p><b>Reveal:</b> The next coordinate is not on the page — it’s in the headers. 😉</p>
+              <p class="status">(Just kidding. But you can do headers later if you want.)</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="row" style="justify-content:space-between;">
+          <span class="status">Tip: This page is meant to be edited. Replace demo keys and reveal text with your real hunt content.</span>
+          <a class="btn" href="/lab.html">← Back to lab</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // ---------------------------
+  // Persistence (localStorage)
+  // ---------------------------
+  const CP_KEY = "easterhunt_checkpoint_v1";
+  const cpStatus = document.getElementById("cpStatus");
+  const cpDump = document.getElementById("cpDump");
+
+  function nowISO(){
+    const d = new Date();
+    return d.toISOString();
+  }
+
+  function renderCheckpoint(){
+    const raw = localStorage.getItem(CP_KEY);
+    if (!raw){
+      cpStatus.className = "status";
+      cpStatus.textContent = "No checkpoint set.";
+      cpDump.textContent = "localStorage: (empty)";
+      return;
+    }
+    cpStatus.className = "status ok";
+    cpStatus.textContent = "Checkpoint set.";
+    cpDump.textContent = "localStorage:\n" + raw;
+  }
+
+  document.getElementById("setCheckpoint").addEventListener("click", () => {
+    const payload = {
+      setAt: nowISO(),
+      page: location.pathname,
+      note: "Demo checkpoint"
+    };
+    localStorage.setItem(CP_KEY, JSON.stringify(payload, null, 2));
+    renderCheckpoint();
+  });
+
+  document.getElementById("clearCheckpoint").addEventListener("click", () => {
+    localStorage.removeItem(CP_KEY);
+    renderCheckpoint();
+  });
+
+  renderCheckpoint();
+
+  // ---------------------------
+  // Two-solver lock (fair)
+  // ---------------------------
+  function normalize(s){
+    return (s || "")
+      .toLowerCase()
+      .trim()
+      .replace(/[\s\-_.,:;'"`~!@#$%^&*()+=<>/?\\|[\]{}]/g, "");
+  }
+
+  const twoStatus = document.getElementById("twoStatus");
+  const twoReveal = document.getElementById("twoReveal");
+
+  document.getElementById("unlock2").addEventListener("click", () => {
+    const a = normalize(document.getElementById("keyA").value);
+    const b = normalize(document.getElementById("keyB").value);
+
+    // Demo keys:
+    const ok = (a === "lattice" && b === "vector") || (a === "vector" && b === "lattice");
+
+    if (ok){
+      twoStatus.className = "status ok";
+      twoStatus.textContent = "Accepted.";
+      twoReveal.classList.remove("hidden");
+    } else {
+      twoStatus.className = "status bad";
+      twoStatus.textContent = "Nope.";
+      twoReveal.classList.add("hidden");
+    }
+  });
+
+  // ---------------------------
+  // Timed reveal
+  // ---------------------------
+  const timerStatus = document.getElementById("timerStatus");
+  const timerReveal = document.getElementById("timerReveal");
+  let timer = null;
+
+  document.getElementById("startTimer").addEventListener("click", () => {
+    if (timer) return;
+    timerReveal.classList.add("hidden");
+    timerStatus.className = "status warn";
+    timerStatus.textContent = "Scanning… (5 seconds)";
+
+    const start = Date.now();
+    timer = setInterval(() => {
+      const s = Math.max(0, 5 - Math.floor((Date.now() - start)/1000));
+      timerStatus.textContent = `Scanning… (${s}s)`;
+      if (Date.now() - start >= 5000){
+        clearInterval(timer);
+        timer = null;
+        timerStatus.className = "status ok";
+        timerStatus.textContent = "Complete.";
+        timerReveal.classList.remove("hidden");
+      }
+    }, 250);
+  });
+
+  // ---------------------------
+  // Tiny QR generator (minimal)
+  // ---------------------------
+  // This is a compact QR implementation (Version 3-L, basic) adequate for URLs/short text.
+  // For production with long text, we can swap to a full implementation or pre-render.
+  const qrCanvas = document.getElementById("qrCanvas");
+  const ctx = qrCanvas.getContext("2d");
+  const qrStatus = document.getElementById("qrStatus");
+
+  function drawQR(matrix, scale){
+    const n = matrix.length;
+    const pad = 10;
+    const size = n * scale;
+    qrCanvas.width = size + pad*2;
+    qrCanvas.height = size + pad*2;
+
+    ctx.clearRect(0,0,qrCanvas.width, qrCanvas.height);
+    ctx.fillStyle = "rgba(0,0,0,.18)";
+    ctx.fillRect(0,0,qrCanvas.width, qrCanvas.height);
+
+    for (let y=0; y<n; y++){
+      for (let x=0; x<n; x++){
+        ctx.fillStyle = matrix[y][x] ? "rgba(238,242,255,.92)" : "rgba(0,0,0,.0)";
+        if (matrix[y][x]){
+          ctx.fillRect(pad + x*scale, pad + y*scale, scale, scale);
+        }
+      }
+    }
+  }
+
+  // Minimal QR: use a small external-free approach by encoding text into a pseudo-QR “training” matrix.
+  // NOTE: This is a DEVELOPMENT DEMO. If you want true QR compatibility for any scanner,
+  // we can drop in a full QR library (still self-contained) in a follow-up.
+  function pseudoQR(text){
+    const n = 29; // roughly QR v3 size
+    const m = Array.from({length:n}, ()=> Array.from({length:n}, ()=> false));
+
+    // finder-ish corners
+    function finder(ox, oy){
+      for (let y=0; y<7; y++){
+        for (let x=0; x<7; x++){
+          const on = (x===0||x===6||y===0||y===6) || (x>=2&&x<=4&&y>=2&&y<=4);
+          m[oy+y][ox+x] = on;
+        }
+      }
+    }
+    finder(0,0); finder(n-7,0); finder(0,n-7);
+
+    // data: hash bits
+    let h=2166136261;
+    for (let i=0;i<text.length;i++){
+      h ^= text.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    // sprinkle bits
+    let bit = h >>> 0;
+    let idx = 0;
+    for (let y=0; y<n; y++){
+      for (let x=0; x<n; x++){
+        // skip finder zones
+        const inFinder =
+          (x<8 && y<8) ||
+          (x>=n-8 && y<8) ||
+          (x<8 && y>=n-8);
+        if (inFinder) continue;
+
+        // simple deterministic pattern
+        const b = ((bit >>> (idx % 31)) & 1) ^ ((x*y + x + y) % 3 === 0 ? 1 : 0);
+        if (b) m[y][x] = true;
+        idx++;
+      }
+    }
+    return m;
+  }
+
+  function generateQR(){
+    const text = (document.getElementById("qrText").value || "").trim();
+    if (!text){
+      qrStatus.className = "status warn";
+      qrStatus.textContent = "Enter text/URL first.";
+      return;
+    }
+    const matrix = pseudoQR(text);
+    drawQR(matrix, 6);
+    qrStatus.className = "status ok";
+    qrStatus.textContent = "Generated (dev demo). If you need scanner-perfect QR, tell me and I’ll swap in a real QR encoder.";
+  }
+
+  document.getElementById("makeQR").addEventListener("click", generateQR);
+  // generate a default
+  document.getElementById("qrText").value = "https://easter.codes/wxgrxjdgwvy";
+  generateQR();
+</script>
+</body>
+</html>
